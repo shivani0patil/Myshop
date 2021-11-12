@@ -3,44 +3,38 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using MyShop.Core.Models;
-using MyShop.Core.ViewModels;
 using MyShop.DataAccess.InMemeory;
+using MyShop.Core.Models;
 
 namespace MyShop.WebUI.Controllers
 {
-    public class ProductManagerController : Controller
+    public class ProductCategoryController : Controller
     {
-        ProductRepository context;
-        ProductCategoryRepository productCategories;
+        ProductCategoryRepository context;
 
-        public ProductManagerController()
+        public ProductCategoryController()
         {
-            context = new ProductRepository();
-            productCategories = new ProductCategoryRepository();
+            context = new ProductCategoryRepository();
         }
         // GET: ProductManager
 
 
         public ActionResult Index()
         {
-            List<product> pro = context.Collection().ToList();
+            List<ProductCategory> pro = context.Collection().ToList();
             return View(pro);
         }
 
         public ActionResult Create()
         {
-            ProductManagerViewModel viewModel = new ProductManagerViewModel();
-            viewModel.pr = new product();
-            viewModel.ProductCategories = productCategories.Collection();
-           
-            return View(viewModel);
+            ProductCategory p = new ProductCategory();
+            return View(p);
         }
 
         [HttpPost]
-        public ActionResult Create(product p)
+        public ActionResult Create(ProductCategory p)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return View(p);
             }
@@ -54,43 +48,35 @@ namespace MyShop.WebUI.Controllers
 
         public ActionResult Edit(string Id)
         {
-            product p = context.Find(Id);
-            if(p==null)
+            ProductCategory p = context.Find(Id);
+            if (p == null)
             {
                 return HttpNotFound();
             }
             else
             {
-                ProductManagerViewModel viewModel = new ProductManagerViewModel();
-                viewModel.pr = p;
-                viewModel.ProductCategories = productCategories.Collection();
-
-                return View(viewModel);
+                return View(p);
             }
         }
 
         [HttpPost]
-        public ActionResult Edit(product p,string Id)
+        public ActionResult Edit(ProductCategory p, string Id)
         {
-            product productEdit = context.Find(Id);
-            
+            ProductCategory productEdit = context.Find(Id);
+
             if (productEdit == null)
             {
                 return HttpNotFound();
             }
             else
             {
-               if(!ModelState.IsValid)
+                if (!ModelState.IsValid)
                 {
                     return View(p);
                 }
 
                 productEdit.Category = p.Category;
-                productEdit.Description = p.Description;
-                productEdit.Image = p.Image;
-                productEdit.Name = p.Name;
-                productEdit.price = p.price;
-
+                
                 context.Commit();
                 return RedirectToAction("Index");
             }
@@ -98,7 +84,7 @@ namespace MyShop.WebUI.Controllers
 
         public ActionResult Delete(string Id)
         {
-            product productDelete = context.Find(Id);
+            ProductCategory productDelete = context.Find(Id);
             if (productDelete == null)
             {
                 return HttpNotFound();
@@ -113,7 +99,7 @@ namespace MyShop.WebUI.Controllers
         [ActionName("Delete")]
         public ActionResult ConfirmDelete(string Id)
         {
-            product productDelete = context.Find(Id);
+            ProductCategory productDelete = context.Find(Id);
             if (productDelete == null)
             {
                 return HttpNotFound();
@@ -124,6 +110,5 @@ namespace MyShop.WebUI.Controllers
                 return RedirectToAction("Index");
             }
         }
-
     }
 }
