@@ -5,10 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.Caching;
 using MyShop.Core.Models;
+using MyShop.Core.Contracts;
 
 namespace MyShop.DataAccess.InMemeory
 {
-    public class InMemeoryRepository<T> where T:BaseEntity
+    public class InMemeoryRepository<T> : IRepository<T> where T : BaseEntity
     {
         ObjectCache cache = MemoryCache.Default;
         List<T> items;
@@ -18,7 +19,7 @@ namespace MyShop.DataAccess.InMemeory
         {
             className = typeof(T).Name;
             items = cache[className] as List<T>;
-            if(items==null)
+            if (items == null)
             {
                 items = new List<T>();
             }
@@ -37,7 +38,7 @@ namespace MyShop.DataAccess.InMemeory
         public void Update(T t)
         {
             T tUpdate = items.Find(i => i.Id == t.Id);
-            if(tUpdate!=null)
+            if (tUpdate != null)
             {
                 tUpdate = t;
             }
@@ -50,7 +51,7 @@ namespace MyShop.DataAccess.InMemeory
         public T Find(string Id)
         {
             T t = items.Find(i => i.Id == Id);
-            if(t!=null)
+            if (t != null)
             {
                 return t;
             }
@@ -68,7 +69,7 @@ namespace MyShop.DataAccess.InMemeory
         public void Delete(string Id)
         {
             T tDelete = items.Find(i => i.Id == Id);
-            if (tDelete !=null)
+            if (tDelete != null)
             {
                 items.Remove(tDelete);
             }
